@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ namespace：必须有值，自定义的唯一字符串
+ 推荐使用：mapper 接口的全限定名称
+-->
+<mapper namespace="com.admin.library.mapper.LendRecordMapper">
+
+    <select id="selectAll" resultType="com.admin.library.domain.vo.LendRecordVo">
+        select r.reader_id, r.username, b.isbn, b.book_name, l.lend_date, l.return_date, l.status
+        from lend_record l
+        join reader r
+        on r.reader_id = l.reader_id
+        join book b
+        on b.isbn = l.isbn
+        <where>
+            <if test="username != null and username != ''">
+                and r.username like '%${username}%'
+            </if>
+            <if test="bookName != null and bookName != ''">
+                and b.book_name like '%${bookName}%'
+            </if>
+            <if test="readerId != null and readerId != ''">
+                and r.reader_id = #{readerId}
+            </if>
+        </where>
+        limit #{skip}, #{size}
+    </select>
+</mapper>
